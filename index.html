@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <title>Coding Assessment</title>
+</head>
+<body>
+  <header>
+    <h3 class="high-score">View high scores</h3>
+    <div>Time: <span>0</span></div>
+  </header>
+  <div class="container">
+  <main>
+    <!-- LANDING -->
+    <div class="landing">
+      <h1>Coding Quiz Challenge</h1>
+      <p>Try to answer the following code-related questions within the time limit.  Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
+      <button class="btn">Start Quiz</button>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="question">
+      <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?</h2>
+      <ul class="answer-list">
+        <li><button class="btn answer-btn">1. Lorem</button></li>
+        <li><button class="btn answer-btn">2. consectetur</button></li>
+        <li><button class="btn answer-btn">3. tempore</button></li>
+        <li><button class="btn answer-btn">4. dolorum</button></li>
+      </ul>
+      <p class="feedback-msg">Wrong!</p>
+    </div>
+
+    <!-- GAME OVER -->
+    <div class="game-over">
+      <h2>All done!</h2>
+      <h3>Your final score is 22.</h3>
+      <form>
+        <label for="initials">Enter initials:</label>
+        <input type="text" id="initials">
+        <button class="btn btn-short" type="submit">Submit</button>
+      </form>
+    </div>
+
+    <!-- HIGH SCORES -->
+    <div class="high-scores">
+      <h2>High Scores</h2>
+      <ul>
+        <li>1. AB - 22</li>
+        <li>1. CD - 12</li>
+      </ul>
+      <div class="actions">
+        <button class="btn btn-short">Go Back</button>
+        <button class="btn btn-short">Clear high scores</button>
+      </div>
+    </div>
+  </main>
+  </div>
+  <script src="./assets/js/main.js"></script>
+</body>
+</html>
