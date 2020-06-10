@@ -11,18 +11,40 @@ var counter = 60;
 var scoreArr = [ { player: 'EZ', score: 22 }, { player: 'JZ', score: 54 } ];
 var questionsArr = [
 	{
-		question      :
+		question           :
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
-		answers       : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
-		correctAnswer : 2
+		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
+		correctAnswerIndex : 2
+	},
+	{
+		question           :
+			"I'm baby mumblecore taiyaki fashion axe shoreditch, tilde mustache vape _______ fixie hella?",
+		answers            : [ 'Lomo', 'banjo', 'messenger', 'taxidermy' ],
+		correctAnswerIndex : 3
+	},
+	{
+		question           :
+			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
+		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
+		correctAnswerIndex : 1
+	},
+	{
+		question           :
+			"I'm baby mumblecore taiyaki fashion axe shoreditch, tilde mustache vape _______ fixie hella?",
+		answers            : [ 'Lomo', 'banjo', 'messenger', 'taxidermy' ],
+		correctAnswerIndex : 0
+	},
+	{
+		question           :
+			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
+		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
+		correctAnswerIndex : 1
 	}
 ];
 
 // EVENT LISTENERS
 highScoreLink.addEventListener('click', highScoresPage);
 startQuizBtn.addEventListener('click', startQuiz);
-
-
 
 function startQuiz() {
 	// clear landing page
@@ -32,32 +54,30 @@ function startQuiz() {
 	timer();
 
 	// call function to create single question page
-	createQuestion();
+	// createQuestion(questionsArr[1]);
+	var i = 0;
+	createQuestion(questionsArr[i]);
 }
-
 
 function timer() {
-  var countdown = function() {
-    counter--;
-    timerDisplay.innerText = counter;
-    if(counter === 0) {
-      clearInterval(startCountdown);
-    }
-    }
-    var startCountdown = setInterval(countdown, 1000)
+	var countdown = function() {
+		counter--;
+		timerDisplay.innerText = counter;
+		if (counter === 0) {
+			clearInterval(startCountdown);
+		}
+	};
+	var startCountdown = setInterval(countdown, 1000);
 }
 
-
-
 // FUNCTION TO CREATE SINGLE QUESTION PAGE
-function createQuestion() {
+function createQuestion(questionObj) {
 	// create question page container
 	var questionContainer = document.createElement('div');
 	questionContainer.className = 'question';
 	// create question
 	var question = document.createElement('h2');
-	question.textContent =
-		'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?';
+	question.textContent = questionObj.question;
 	// append question
 	questionContainer.appendChild(question);
 	// create answer-list
@@ -65,18 +85,51 @@ function createQuestion() {
 	answerList.className = 'answer-list';
 
 	// create array of answers
-	var answers = [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ];
+	var answers = questionObj.answers;
 	// generate li for each answer in array
 	for (var i = 0; i < answers.length; i++) {
 		var answer = document.createElement('li');
+		// add button
 		answer.innerHTML =
-			"<button class='btn answer-btn'>" + (i + 1) + '. ' + answers[i] + '</button>';
+			'<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
+		// console.log(i);
+		// console.log(questionObj.correctAnswerIndex);
+		// set data-attr flag on correct answer
+		if (i === questionObj.correctAnswerIndex) {
+			answer.setAttribute('data-correct-answer', 'true');
+		}
 		// append answer to ul
 		answerList.appendChild(answer);
 	}
 
 	questionContainer.appendChild(answerList);
 	pageContent.appendChild(questionContainer);
+
+  answerList.addEventListener('click', checkAnswer);
+  
+  function checkAnswer(event) {
+    var clicked = event.target.closest('li');
+    if (clicked.hasAttribute('data-correct-answer')){
+      
+      displayCorrect(answerList);
+    } else {
+      displayWrong(answerList);
+    }
+  }
+}
+
+function displayCorrect(answerList) {
+  var correctMsgEl = document.createElement('p');
+  correctMsgEl.className = 'feedback-msg';
+  correctMsgEl.innerText = 'Correct!'
+  answerList.appendChild(correctMsgEl);
+}
+
+function displayWrong(answerList) {
+  var wrongMsgEl = document.createElement('p');
+  wrongMsgEl.className = 'feedback-msg';
+  wrongMsgEl.innerText = 'Wrong!'
+  answerList.appendChild(wrongMsgEl);
 }
 
 // FUNCTION TO CREATE GAME OVER PAGE
