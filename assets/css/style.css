@@ -100,7 +100,7 @@ main {
 /* QUESTIONS */
 .question {
   /* remove */
-  display: none;
+  /* display: none; */
 }
 
 .feedback-msg {
@@ -117,7 +117,7 @@ main {
 .game-over {
   line-height: 2;
   /* remove */
-  display: none;
+  /* display: none; */
 }
 
 .game-over h3 {
@@ -148,7 +148,7 @@ main {
 /* HIGH SCORES */
 /* remove */
 .high-scores {
-  display: none;
+  /* display: none; */
 }
 
 .high-scores ul {
