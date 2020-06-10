@@ -4,22 +4,25 @@ var page = document.getElementById('page');
 var pageContent = document.getElementById('page-content');
 var startQuizBtn = document.getElementById('start-quiz');
 var landingPage = document.getElementById('landing');
+var timerDisplay = document.getElementById('timer');
 
 // GLOBAL VARIABLES
 var counter = 60;
 var scoreArr = [ { player: 'EZ', score: 22 }, { player: 'JZ', score: 54 } ];
 var questionsArr = [
 	{
-		question :
+		question      :
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
-    answers  : ['Lorem', 'consectetur', 'tempore', 'dolorum'],
-    correctAnswer: 2
+		answers       : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
+		correctAnswer : 2
 	}
 ];
 
 // EVENT LISTENERS
 highScoreLink.addEventListener('click', highScoresPage);
 startQuizBtn.addEventListener('click', startQuiz);
+
+
 
 function startQuiz() {
 	// clear landing page
@@ -28,16 +31,23 @@ function startQuiz() {
 	// start timer
 	timer();
 
-	// while( timer > 0 ) {
-	//  for (var i = 0; i > questionsArr.length; i++)}
-
 	// call function to create single question page
 	createQuestion();
 }
 
+
 function timer() {
-	return;
+  var countdown = function() {
+    counter--;
+    timerDisplay.innerText = counter;
+    if(counter === 0) {
+      clearInterval(startCountdown);
+    }
+    }
+    var startCountdown = setInterval(countdown, 1000)
 }
+
+
 
 // FUNCTION TO CREATE SINGLE QUESTION PAGE
 function createQuestion() {
@@ -99,32 +109,31 @@ function gameOverPage() {
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
-  pageContent.remove();
+	pageContent.remove();
 	var highScoresContainer = document.createElement('div');
-  highScoresContainer.className = 'high-scores';
-  var heading = document.createElement('h2');
-  heading.innerText = "High Scores";
-  highScoresContainer.appendChild(heading);
+	highScoresContainer.className = 'high-scores';
+	var heading = document.createElement('h2');
+	heading.innerText = 'High Scores';
+	highScoresContainer.appendChild(heading);
 	var highScoresList = document.createElement('ul');
 	for (var i = 0; i < scoreArr.length; i++) {
-    var playerStats = document.createElement('li');
-    playerStats.innerText = (i + 1) + ". "  + scoreArr[i].player + " - " + scoreArr[i].score;
-    highScoresList.appendChild(playerStats);
-  }
-  highScoresContainer.appendChild(highScoresList);
-  var actionsContainer = document.createElement('div');
-  actionsContainer.className = 'actions';
-  var goBackBtn = document.createElement('button');
-  goBackBtn.classList = 'btn btn-short';
-  goBackBtn.innerText = 'Go Back';
-  actionsContainer.appendChild(goBackBtn);
-  var clearScores = document.createElement('button');
-  clearScores.classList = 'btn btn-short';
-  clearScores.innerText = 'Clear high scores';
-  actionsContainer.appendChild(clearScores);
+		var playerStats = document.createElement('li');
+		playerStats.innerText =
+			i + 1 + '. ' + scoreArr[i].player + ' - ' + scoreArr[i].score;
+		highScoresList.appendChild(playerStats);
+	}
+	highScoresContainer.appendChild(highScoresList);
+	var actionsContainer = document.createElement('div');
+	actionsContainer.className = 'actions';
+	var goBackBtn = document.createElement('button');
+	goBackBtn.classList = 'btn btn-short';
+	goBackBtn.innerText = 'Go Back';
+	actionsContainer.appendChild(goBackBtn);
+	var clearScores = document.createElement('button');
+	clearScores.classList = 'btn btn-short';
+	clearScores.innerText = 'Clear high scores';
+	actionsContainer.appendChild(clearScores);
 
-  highScoresContainer.appendChild(actionsContainer);
-  page.appendChild(highScoresContainer);
+	highScoresContainer.appendChild(actionsContainer);
+	page.appendChild(highScoresContainer);
 }
-
-
