@@ -21,7 +21,8 @@ body {
 .container {
   width: 60%;
   max-width: 960px;
-  margin: 0 auto;
+  margin: 2rem auto 0 auto;
+  
   line-height: 1.2;
 }
 
@@ -81,9 +82,9 @@ header {
   cursor: pointer;
 }
 
-main {
+/* main {
   margin-top: 2rem;
-}
+} */
 
 /* LANDING */
 
@@ -155,9 +156,8 @@ main {
 }
 
 /* HIGH SCORES */
-/* remove */
 .high-scores {
-  /* display: none; */
+  margin-top: 7rem;
 }
 
 .high-scores ul {

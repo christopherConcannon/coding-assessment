@@ -6,19 +6,29 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <title>Coding Assessment</title>
 </head>
-<body>
-  <header>
-    <h3 class="high-score" id="high-score">View high scores</h3>
-    <div>Time: <span id="timer">60</span></div>
-  </header>
-  <div id="page" class="container">
-    <main id="page-content">
-      <!-- LANDING -->
-      <div id="landing" class="landing">
-        <h1>Coding Quiz Challenge</h1>
-        <p>Try to answer the following code-related questions within the time limit.  Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
-        <button id="start-quiz" class="btn">Start Quiz</button>
-      </div>
+<body id="page">
+  <div id="page-container">
+    <header>
+      <h3 class="high-score" id="high-score">View high scores</h3>
+      <div>Time: <span id="timer">60</span></div>
+    </header>
+    <div class="container">
+      <main id="page-content">
+        <div id="landing" class="landing">
+          <h1>Coding Quiz Challenge</h1>
+          <p>Try to answer the following code-related questions within the time limit.  Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
+          <button id="start-quiz" class="btn">Start Quiz</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="./assets/js/main.js"></script>
+</body>
+</html>
+
+
+
 
       <!-- QUESTION -->
       <!-- <div class="question">
@@ -55,8 +65,3 @@
           <button class="btn btn-short">Clear high scores</button>
         </div>
       </div> -->
-    </main>
-  </div>
-  <script src="./assets/js/main.js"></script>
-</body>
-</html>

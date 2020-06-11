@@ -1,6 +1,6 @@
 // CACHE PAGE ELEMENTS
 var highScoreLink = document.getElementById('high-score');
-var page = document.getElementById('page');
+var pageContainer = document.getElementById('page-container');
 var pageContent = document.getElementById('page-content');
 var startQuizBtn = document.getElementById('start-quiz');
 var landingPage = document.getElementById('landing');
@@ -9,7 +9,6 @@ var timerDisplay = document.getElementById('timer');
 // GLOBAL VARIABLES
 var counter = 60;
 var scoreArr = loadScores() || [];
-console.log(scoreArr);
 var questionsArr = [
 	{
 		question           :
@@ -44,7 +43,6 @@ var questionsArr = [
 ];
 var questionIndex = 0;
 
-
 // EVENT LISTENERS
 highScoreLink.addEventListener('click', highScoresPage);
 startQuizBtn.addEventListener('click', startQuiz);
@@ -63,24 +61,23 @@ function startQuiz() {
 function timer() {
 	var countdown = function() {
 		counter--;
-		timerDisplay.innerText = counter;
+		// timerDisplay.innerText = counter
+		counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
 		if (counter === 0) {
-      clearInterval(startCountdown);
-      gameOverPage(startCountdown);
+			clearInterval(startCountdown);
+			gameOverPage();
 		}
 	};
-	var startCountdown = setInterval(countdown, 1000);
+	window.startCountdown = setInterval(countdown, 1000);
 }
 
 // FUNCTION TO CREATE SINGLE QUESTION PAGE
 function createQuestion(questionObj) {
-
-  
 	// create question page container
 	var questionContainer = document.createElement('div');
-  questionContainer.className = 'question';
-  questionContainer.id = 'question';
-  
+	questionContainer.className = 'question';
+	questionContainer.id = 'question';
+
 	// create question
 	var question = document.createElement('h2');
 	question.textContent = questionObj.question;
@@ -95,8 +92,8 @@ function createQuestion(questionObj) {
 	var answers = questionObj.answers;
 	// generate li for each answer in array
 	for (var i = 0; i < answers.length; i++) {
-    var answer = document.createElement('li');
-    answer.className = 'answer-list-item';
+		var answer = document.createElement('li');
+		answer.className = 'answer-list-item';
 		// add button
 		answer.innerHTML =
 			'<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
@@ -113,120 +110,130 @@ function createQuestion(questionObj) {
 	questionContainer.appendChild(answerList);
 	pageContent.appendChild(questionContainer);
 
-  answerList.addEventListener('click', checkAnswer);
-  
-  // function checkAnswer(event) {
-  //   var clicked = event.target.closest('li');
-  //   if (clicked.hasAttribute('data-correct-answer')){
-      
-  //     displayCorrect(answerList);
-  //   } else {
-  //     displayWrong(answerList);
-  //   }
-  // }
+	answerList.addEventListener('click', checkAnswer);
 
+	// function checkAnswer(event) {
+	//   var clicked = event.target.closest('li');
+	//   if (clicked.hasAttribute('data-correct-answer')){
+
+	//     displayCorrect(answerList);
+	//   } else {
+	//     displayWrong(answerList);
+	//   }
+	// }
 }
 
 // CHECK ANSWER, DISPLAY FEEDBACK MSG, TIMED CALL TO NEXT QUESTION FUNCTION
 function checkAnswer(event) {
-  // find parent li of clicked button
-  var clicked = event.target.closest('li.answer-list-item');
-  var answerList = document.getElementById('answer-list');
- 
-  // check if clicked is truthy otherwise, ul was clicked and we don't want function to proceed
-  if (clicked) {
-    var isCorrectAnswer = (clicked.hasAttribute('data-correct-answer'));
-    if (isCorrectAnswer) {
-      // display correct message
-      var correctMsgEl = document.createElement('p');
-      correctMsgEl.className = 'feedback-msg';
-      correctMsgEl.innerText = 'Correct!'
-      answerList.appendChild(correctMsgEl); 
-    } else {
-      // display wrong message
-      var wrongMsgEl = document.createElement('p');
-      wrongMsgEl.className = 'feedback-msg';
-      wrongMsgEl.innerText = 'Wrong!'
-      answerList.appendChild(wrongMsgEl);
-    }
-    answerList.removeEventListener('click', checkAnswer);
-  
-    // QUESTION...DO I NEED TO CLEAR THIS TIMEOUT?
-    var delayNextQuestion = setTimeout(function() {
-      var questionContainer = document.getElementById('question');
-      questionContainer.remove();
-      questionIndex++;
-      if (questionIndex < questionsArr.length) {
-        createQuestion(questionsArr[questionIndex]);
-      } else {
-        gameOverPage();
-      }
-    }, 1000)
-  }
+	// find parent li of clicked button
+	var clicked = event.target.closest('li.answer-list-item');
+	var answerList = document.getElementById('answer-list');
+
+	// check if clicked is truthy otherwise, ul was clicked and we don't want function to proceed
+	if (clicked) {
+		var isCorrectAnswer = clicked.hasAttribute('data-correct-answer');
+		if (isCorrectAnswer) {
+			// display correct message
+			var correctMsgEl = document.createElement('p');
+			correctMsgEl.className = 'feedback-msg';
+			correctMsgEl.innerText = 'Correct!';
+			answerList.appendChild(correctMsgEl);
+		} else {
+			// display wrong message
+			counter = counter - 10;
+			var wrongMsgEl = document.createElement('p');
+			wrongMsgEl.className = 'feedback-msg';
+			wrongMsgEl.innerText = 'Wrong!';
+			answerList.appendChild(wrongMsgEl);
+		}
+		answerList.removeEventListener('click', checkAnswer);
+
+		// QUESTION...DO I NEED TO CLEAR THIS TIMEOUT?
+		var delayNextQuestion = setTimeout(function() {
+			var questionContainer = document.getElementById('question');
+			questionContainer.remove();
+			questionIndex++;
+			if (questionIndex < questionsArr.length) {
+				createQuestion(questionsArr[questionIndex]);
+			} else {
+				gameOverPage();
+			}
+		}, 1000);
+	}
 }
 
 // FUNCTION TO CREATE GAME OVER PAGE
-function gameOverPage(intervalId) {
-
-  // NOT WORKING...TIMER STILL GOING
-  clearInterval(intervalId);
+function gameOverPage() {
+	clearInterval(window.startCountdown);
 
 	var gameOver = document.createElement('div');
-  gameOver.className = 'game-over';
-  gameOver.id = 'game-over';
+	gameOver.className = 'game-over';
+	gameOver.id = 'game-over';
 
-	var msg = document.createElement('h2');
-	msg.innerText = 'All done!';
-	gameOver.appendChild(msg);
+	var gameOverMsg = document.createElement('h2');
+	gameOverMsg.innerText = 'All done!';
+	gameOver.appendChild(gameOverMsg);
 
-  var score = document.createElement('h3');
-	score.innerText = 'Your final score is ' + counter + '.';
-	gameOver.appendChild(score);
+	var scoreMsg = document.createElement('h3');
+	scoreMsg.innerText = 'Your final score is ';
 
-	var initialsInput = document.createElement('form');
-	initialsInput.innerHTML =
+	var score = document.createElement('span');
+	score.id = 'player-score';
+
+	if (counter >= 0) {
+		score.innerText = counter + '.';
+		// scoreMsg.appendChild(score);
+	} else {
+		score.innerText = 0 + '.';
+		// var fullStop = document.createElement('span');
+		// fullStop.innerText = '.';
+		// scoreMsg.appendChild(score);
+		// scoreMsg.appendChild(fullStop);
+	}
+
+	scoreMsg.appendChild(score);
+	gameOver.appendChild(scoreMsg);
+
+	var playerStatsFormEl = document.createElement('form');
+	playerStatsFormEl.innerHTML =
 		"<label for='initials'>Enter initials:</label>" +
-		"<input type='text' id='initials' name='initials'>" +
-    "<button class='btn btn-short' type='submit'>Submit</button>";
-    
-    // add listener for input submit which calls function to add player object with player and score to high scoreArr
-  initialsInput.addEventListener('submit', handleStatsSubmit);
+		"<input type='text' id='initials' name='initials' maxlength=2>" +
+		"<button class='btn btn-short' type='submit'>Submit</button>";
 
-	gameOver.appendChild(initialsInput);
+	// add listener for input submit which calls function to add player object with player and score to high scoreArr
+	playerStatsFormEl.addEventListener('submit', handleStatsSubmit);
 
-	page.appendChild(gameOver);
+	gameOver.appendChild(playerStatsFormEl);
 
+	pageContent.appendChild(gameOver);
 }
 
 function handleStatsSubmit(event) {
-  event.preventDefault();
-  // get and save player stats
-  var playerInitials = document.querySelector("input[name='initials']").value;
-  var playerScore = counter;
-  var statObj = {
-    player: playerInitials,
-    score: playerScore
-  }
-  scoreArr.push(statObj);
-  // localStorage.setItem('stats', JSON.stringify(scoreArr));
-  saveScores();
+	event.preventDefault();
+	// get and save player stats
+  var playerInitials = document.querySelector("input[name='initials']").value.toUpperCase();
+	var playerScore = counter > 0 ? counter : 0;
+	var statObj = {
+		player : playerInitials,
+		score  : playerScore
+	};
+	scoreArr.push(statObj);
+	saveScores();
 
-  // display high scores
-  var gameOverView = document.getElementById('game-over');
-  gameOverView.remove();
-  highScoresPage();
+	// display high scores
+	var gameOverView = document.getElementById('game-over');
+	// gameOverView.remove();
+	highScoresPage();
 }
-
-// var taskNameInput = document.querySelector("input[name='task-name']").value;
-
-
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
-  // remove 'view high scores' listener
-  highScoreLink.removeEventListener('click', highScoresPage);
+  pageContainer.remove();
+	// remove 'view high scores' listener
+	highScoreLink.removeEventListener('click', highScoresPage);
 	var highScoresContainer = document.createElement('div');
-	highScoresContainer.className = 'high-scores';
+	// highScoresContainer.classList = 'container high-scores';
+	highScoresContainer.classList = 'container high-scores';
 	highScoresContainer.id = 'high-scores';
 	var heading = document.createElement('h2');
 	heading.innerText = 'High Scores';
@@ -241,16 +248,16 @@ function highScoresPage() {
 	highScoresContainer.appendChild(highScoresList);
 	var actionsContainer = document.createElement('div');
 	actionsContainer.className = 'actions';
-  var goBackBtn = document.createElement('a');
-  goBackBtn.id = 'go-back'
-  goBackBtn.setAttribute('href', './index.html');
+	var goBackBtn = document.createElement('a');
+	goBackBtn.id = 'go-back';
+	goBackBtn.setAttribute('href', './index.html');
 	goBackBtn.classList = 'btn btn-short';
 	goBackBtn.innerText = 'Go Back';
 	actionsContainer.appendChild(goBackBtn);
 	var clearScores = document.createElement('button');
 	clearScores.classList = 'btn btn-short';
-  clearScores.innerText = 'Clear high scores';
-  clearScores.addEventListener('click', handleClearScores);
+	clearScores.innerText = 'Clear high scores';
+	clearScores.addEventListener('click', handleClearScores);
 	actionsContainer.appendChild(clearScores);
 
 	highScoresContainer.appendChild(actionsContainer);
@@ -258,38 +265,24 @@ function highScoresPage() {
 }
 
 function handleClearScores() {
-  scoreArr = [];
-  saveScores();
-  var highScoresContainer = document.getElementById('high-scores');
-  highScoresContainer.remove();
-  highScoresPage();
+	scoreArr = [];
+	saveScores();
+	var highScoresContainer = document.getElementById('high-scores');
+	highScoresContainer.remove();
+	highScoresPage();
 }
 
 function saveScores() {
-  localStorage.setItem('stats', JSON.stringify(scoreArr));
+	localStorage.setItem('stats', JSON.stringify(scoreArr));
 }
 
 function loadScores() {
-  var stats = localStorage.getItem('stats')
-  if (!stats) {
-    return false;
-  }
-  return stats = JSON.parse(stats);
+	var stats = localStorage.getItem('stats');
+	if (!stats) {
+		return false;
+	}
+	return (stats = JSON.parse(stats));
 }
-
-// ISSUES - TO DO
-
-// GAME OVER PAGE
-// stop timer (clearInterval) when gameOver due to all questions asked
-
-// add listener to intials submit
-  // handler to add player stats to array...make sure score is correct val, nut running counter val
-  //            validate initials
-
-
-// HIGH SCORES PAGE
-// clear page from all possible referral pages...may need to refactor all view generating functions to remove main wrapper, then dynamically add back on
-
 
 
 
@@ -297,7 +290,3 @@ function loadScores() {
 // move data to external file and import
 // change element names to *El
 // clean up
-
-
-
-
