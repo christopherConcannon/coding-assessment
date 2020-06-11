@@ -8,7 +8,8 @@ var timerDisplay = document.getElementById('timer');
 
 // GLOBAL VARIABLES
 var counter = 60;
-var scoreArr = [ { player: 'EZ', score: 22 }, { player: 'JZ', score: 54 } ];
+var scoreArr = loadScores() || [];
+console.log(scoreArr);
 var questionsArr = [
 	{
 		question           :
@@ -64,7 +65,8 @@ function timer() {
 		counter--;
 		timerDisplay.innerText = counter;
 		if (counter === 0) {
-			clearInterval(startCountdown);
+      clearInterval(startCountdown);
+      gameOverPage(startCountdown);
 		}
 	};
 	var startCountdown = setInterval(countdown, 1000);
@@ -128,7 +130,6 @@ function createQuestion(questionObj) {
 // CHECK ANSWER, DISPLAY FEEDBACK MSG, TIMED CALL TO NEXT QUESTION FUNCTION
 function checkAnswer(event) {
   // find parent li of clicked button
-  console.log(event.target);
   var clicked = event.target.closest('li.answer-list-item');
   var answerList = document.getElementById('answer-list');
  
@@ -150,23 +151,25 @@ function checkAnswer(event) {
     }
     answerList.removeEventListener('click', checkAnswer);
   
+    // QUESTION...DO I NEED TO CLEAR THIS TIMEOUT?
     var delayNextQuestion = setTimeout(function() {
       var questionContainer = document.getElementById('question');
       questionContainer.remove();
       questionIndex++;
-      createQuestion(questionsArr[questionIndex]);
+      if (questionIndex < questionsArr.length) {
+        createQuestion(questionsArr[questionIndex]);
+      } else {
+        gameOverPage();
+      }
     }, 1000)
   }
-  
-
-
-  // QUESTION...DO I NEED TO CLEAR THIS TIMEOUT?
 }
 
 // FUNCTION TO CREATE GAME OVER PAGE
-function gameOverPage() {
-	// clear page
-	pageContent.remove();
+function gameOverPage(intervalId) {
+
+  // NOT WORKING...TIMER STILL GOING
+  clearInterval(intervalId);
 
 	var gameOver = document.createElement('div');
 	gameOver.className = 'game-over';
@@ -175,21 +178,40 @@ function gameOverPage() {
 	msg.innerText = 'All done!';
 	gameOver.appendChild(msg);
 
-	var score = document.createElement('h3');
-	score.innerText = 'Your final score is 22.';
+  var score = document.createElement('h3');
+	score.innerText = 'Your final score is ' + counter + '.';
 	gameOver.appendChild(score);
 
 	var initialsInput = document.createElement('form');
 	initialsInput.innerHTML =
 		"<label for='initials'>Enter initials:</label>" +
-		"<input type='text' id='initials'>" +
-		"<button class='btn btn-short' type='submit'>Submit</button>";
+		"<input type='text' id='initials' name='initials'>" +
+    "<button class='btn btn-short' type='submit'>Submit</button>";
+    
+    // add listener for input submit which calls function to add player object with player and score to high scoreArr
+  initialsInput.addEventListener('submit', savePlayerStats);
+
 	gameOver.appendChild(initialsInput);
 
 	page.appendChild(gameOver);
 
-	// add listener for input submit which calls function to add player object with player and score to high scoreArr
 }
+
+function savePlayerStats(event) {
+  event.preventDefault();
+  var playerInitials = document.querySelector("input[name='initials']").value;
+  var playerScore = counter;
+  var statObj = {
+    player: playerInitials,
+    score: playerScore
+  }
+  scoreArr.push(statObj);
+  localStorage.setItem('stats', JSON.stringify(scoreArr));
+}
+
+// var taskNameInput = document.querySelector("input[name='task-name']").value;
+
+
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
@@ -221,3 +243,34 @@ function highScoresPage() {
 	highScoresContainer.appendChild(actionsContainer);
 	page.appendChild(highScoresContainer);
 }
+
+function loadScores() {
+  var stats = localStorage.getItem('stats')
+  if (!stats) {
+    return false;
+  }
+  return stats = JSON.parse(stats);
+}
+
+// ISSUES - TO DO
+
+// GAME OVER PAGE
+// stop timer (clearInterval) when gameOver due to all questions asked
+
+// add listener to intials submit
+  // handler to add player stats to array...make sure score is correct val, nut running counter val
+  //            add scores to localStorage
+  //            go to high scores page
+
+// style initiols input 
+
+// HIGH SCORES PAGE
+// display scores dynamically from localStorage
+
+//  make go back button on high scores page an anchor link to return to landing page
+
+// remove listener from h3#high-score once high score page is loaded 
+
+
+
+

@@ -71,7 +71,10 @@ header {
 
 .high-score {
   color: var(--secondary-color);
-  
+}
+
+.high-score:hover {
+  cursor: pointer;
 }
 
 main {
