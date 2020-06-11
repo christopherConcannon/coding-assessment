@@ -172,7 +172,8 @@ function gameOverPage(intervalId) {
   clearInterval(intervalId);
 
 	var gameOver = document.createElement('div');
-	gameOver.className = 'game-over';
+  gameOver.className = 'game-over';
+  gameOver.id = 'game-over';
 
 	var msg = document.createElement('h2');
 	msg.innerText = 'All done!';
@@ -189,7 +190,7 @@ function gameOverPage(intervalId) {
     "<button class='btn btn-short' type='submit'>Submit</button>";
     
     // add listener for input submit which calls function to add player object with player and score to high scoreArr
-  initialsInput.addEventListener('submit', savePlayerStats);
+  initialsInput.addEventListener('submit', handleStatsSubmit);
 
 	gameOver.appendChild(initialsInput);
 
@@ -197,8 +198,9 @@ function gameOverPage(intervalId) {
 
 }
 
-function savePlayerStats(event) {
+function handleStatsSubmit(event) {
   event.preventDefault();
+  // get and save player stats
   var playerInitials = document.querySelector("input[name='initials']").value;
   var playerScore = counter;
   var statObj = {
@@ -206,7 +208,13 @@ function savePlayerStats(event) {
     score: playerScore
   }
   scoreArr.push(statObj);
-  localStorage.setItem('stats', JSON.stringify(scoreArr));
+  // localStorage.setItem('stats', JSON.stringify(scoreArr));
+  saveScores();
+
+  // display high scores
+  var gameOverView = document.getElementById('game-over');
+  gameOverView.remove();
+  highScoresPage();
 }
 
 // var taskNameInput = document.querySelector("input[name='task-name']").value;
@@ -215,9 +223,11 @@ function savePlayerStats(event) {
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
-	pageContent.remove();
+  // remove 'view high scores' listener
+  highScoreLink.removeEventListener('click', highScoresPage);
 	var highScoresContainer = document.createElement('div');
 	highScoresContainer.className = 'high-scores';
+	highScoresContainer.id = 'high-scores';
 	var heading = document.createElement('h2');
 	heading.innerText = 'High Scores';
 	highScoresContainer.appendChild(heading);
@@ -231,17 +241,32 @@ function highScoresPage() {
 	highScoresContainer.appendChild(highScoresList);
 	var actionsContainer = document.createElement('div');
 	actionsContainer.className = 'actions';
-	var goBackBtn = document.createElement('button');
+  var goBackBtn = document.createElement('a');
+  goBackBtn.id = 'go-back'
+  goBackBtn.setAttribute('href', './index.html');
 	goBackBtn.classList = 'btn btn-short';
 	goBackBtn.innerText = 'Go Back';
 	actionsContainer.appendChild(goBackBtn);
 	var clearScores = document.createElement('button');
 	clearScores.classList = 'btn btn-short';
-	clearScores.innerText = 'Clear high scores';
+  clearScores.innerText = 'Clear high scores';
+  clearScores.addEventListener('click', handleClearScores);
 	actionsContainer.appendChild(clearScores);
 
 	highScoresContainer.appendChild(actionsContainer);
 	page.appendChild(highScoresContainer);
+}
+
+function handleClearScores() {
+  scoreArr = [];
+  saveScores();
+  var highScoresContainer = document.getElementById('high-scores');
+  highScoresContainer.remove();
+  highScoresPage();
+}
+
+function saveScores() {
+  localStorage.setItem('stats', JSON.stringify(scoreArr));
 }
 
 function loadScores() {
@@ -259,17 +284,19 @@ function loadScores() {
 
 // add listener to intials submit
   // handler to add player stats to array...make sure score is correct val, nut running counter val
-  //            add scores to localStorage
-  //            go to high scores page
+  //            validate initials
 
-// style initiols input 
 
 // HIGH SCORES PAGE
-// display scores dynamically from localStorage
+// clear page from all possible referral pages...may need to refactor all view generating functions to remove main wrapper, then dynamically add back on
 
-//  make go back button on high scores page an anchor link to return to landing page
 
-// remove listener from h3#high-score once high score page is loaded 
+
+
+// REFACTOR
+// move data to external file and import
+// change element names to *El
+// clean up
 
 
 
