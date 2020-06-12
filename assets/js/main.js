@@ -10,22 +10,29 @@ var counter = 60;
 var scoreArr = loadScores() || [];
 var questionIndex = 0;
 var questionsArr = [
-  {
-		question           :
-			"Commonly used data types do NOT include:",
+	{
+		question           : 'Commonly used data types do NOT include:',
 		answers            : [ 'strings', 'booleans', 'alerts', 'numbers' ],
 		correctAnswerIndex : 2
 	},
 	{
-		question           :
-			'Arrays in Javascript can be used to store _______',
-		answers            : [ 'numbers and strings', 'other arrays', 'booleans', 'all of the above' ],
+		question           : 'Arrays in Javascript can be used to store _______',
+		answers            : [
+			'numbers and strings',
+			'other arrays',
+			'booleans',
+			'all of the above'
+		],
 		correctAnswerIndex : 3
 	},
 	{
-		question           :
-			"The condition in an IF/ELSE is enclosed with _______",
-		answers            : [ 'quotes', 'curly brackets', 'parenthesis', 'square brackets' ],
+		question           : 'The condition in an IF/ELSE is enclosed with _______',
+		answers            : [
+			'quotes',
+			'curly brackets',
+			'parenthesis',
+			'square brackets'
+		],
 		correctAnswerIndex : 2
 	},
 	{
@@ -33,49 +40,50 @@ var questionsArr = [
 			'String values must be enclosed within _______ when being assigned to variables',
 		answers            : [ 'commas', 'curly brackets', 'quotes', 'parenthesis' ],
 		correctAnswerIndex : 2
-  },
-  {
+	},
+	{
 		question           :
 			'A very useful tool used during development and debugging for printing content to the debugger:',
-		answers            : [ 'JavaScript', 'terminal/bash', 'for loops', 'console.log' ],
+		answers            : [
+			'JavaScript',
+			'terminal/bash',
+			'for loops',
+			'console.log'
+		],
 		correctAnswerIndex : 3
 	}
 ];
-
-
 
 // GLOBAL SCOPE EVENT LISTENERS
 highScoreLink.addEventListener('click', highScoresPage);
 startQuizBtn.addEventListener('click', startQuiz);
 
-
 function startQuiz() {
 	// start timer
 	timer();
 
-	// call function to create single question 
+	// call function to create single question
 	createQuestion(questionsArr[questionIndex]);
 }
 
 function timer() {
-  
 	window.startCountdown = setInterval(function() {
-    counter--;
-    // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
-    counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
-    // stop timer at 0
+		counter--;
+		// check if above zero since wrong answer can pull it below despite conditional check for clearInterval
+		counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
+		// stop timer at 0
 		if (counter === 0) {
-      clearInterval(startCountdown);
+			clearInterval(startCountdown);
 			gameOverView();
 		}
 	}, 1000);
-  // var countdown = function() {
-  //   counter--;
-  //   // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
-  //   counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
-  //   // stop timer at 0
+	// var countdown = function() {
+	//   counter--;
+	//   // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
+	//   counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
+	//   // stop timer at 0
 	// 	if (counter === 0) {
-  //     clearInterval(startCountdown);
+	//     clearInterval(startCountdown);
 	// 		gameOverView();
 	// 	}
 	// };
@@ -84,11 +92,11 @@ function timer() {
 
 // FUNCTION TO CREATE SINGLE QUESTION VIEW
 function createQuestion(questionObj) {
-  // clear page
-  pageContent.innerHTML = ""
+	// clear page
+	pageContent.innerHTML = '';
 
-  // iterate index for call to next question
-  questionIndex++;
+	// iterate index for call to next question
+	questionIndex++;
 
 	// create question page container
 	var questionContainerEl = document.createElement('div');
@@ -113,8 +121,8 @@ function createQuestion(questionObj) {
 		answerEl.className = 'answer-list-item';
 		// add button
 		answerEl.innerHTML =
-      // '<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
-      `<button class="btn answer-btn">${i + 1}. ${answers[i]}</button>`;
+			// '<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
+			`<button class="btn answer-btn">${i + 1}. ${answers[i]}</button>`;
 		// set data-attr flag on correct answer
 		if (i === questionObj.correctAnswerIndex) {
 			answerEl.setAttribute('data-correct-answer', 'true');
@@ -154,23 +162,23 @@ function checkAnswer(event) {
 		}
 		answerList.removeEventListener('click', checkAnswer);
 
-    // remove feedback msg after 1 second and proceed to next question or game over
+		// remove feedback msg after 1 second and proceed to next question or game over
 		setTimeout(function() {
-      if (counter <= 0 || questionIndex >= questionsArr.length) {
-        gameOverView();
-      } else {
+			if (counter <= 0 || questionIndex >= questionsArr.length) {
+				gameOverView();
+			} else {
 				createQuestion(questionsArr[questionIndex]);
-			} 
+			}
 		}, 1000);
 	}
 }
 
-// FUNCTION TO CREATE GAME-OVER PAGE
+// FUNCTION TO CREATE GAME-OVER VIEW
 function gameOverView() {
-  // stop timer
-  clearInterval(window.startCountdown);
-  
-  pageContent.innerHTML = '';
+	// stop timer
+	clearInterval(window.startCountdown);
+
+	pageContent.innerHTML = '';
 
 	var gameOverEl = document.createElement('div');
 	gameOverEl.className = 'game-over';
@@ -211,7 +219,9 @@ function gameOverView() {
 function handleStatsSubmit(event) {
 	event.preventDefault();
 	// get and save player stats
-  var playerInitials = document.querySelector("input[name='initials']").value.toUpperCase();
+	var playerInitials = document
+		.querySelector("input[name='initials']")
+		.value.toUpperCase();
 	var playerScore = counter > 0 ? counter : 0;
 	var playerStatsObj = {
 		player : playerInitials,
@@ -226,7 +236,7 @@ function handleStatsSubmit(event) {
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
-  page.innerHTML = "";
+	page.innerHTML = '';
 
 	var highScoresContainerEl = document.createElement('div');
 	// highScoresContainerEl.classList = 'container high-scores';
@@ -268,10 +278,9 @@ function handleClearScores() {
 	highScoresPage();
 }
 
-
 function saveScores() {
-  // sort high scores highest to lowest
-  scoreArr.sort((a, b) => b.score - a.score);
+	// sort high scores highest to lowest
+	scoreArr.sort((a, b) => b.score - a.score);
 	localStorage.setItem('stats', JSON.stringify(scoreArr));
 }
 
@@ -282,9 +291,3 @@ function loadScores() {
 	}
 	return (stats = JSON.parse(stats));
 }
-
-
-
-
-
-// style a bit smaller so no scroll bar
