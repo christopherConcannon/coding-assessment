@@ -77,17 +77,6 @@ function timer() {
 			gameOverView();
 		}
 	}, 1000);
-	// var countdown = function() {
-	//   counter--;
-	//   // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
-	//   counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
-	//   // stop timer at 0
-	// 	if (counter === 0) {
-	//     clearInterval(startCountdown);
-	// 		gameOverView();
-	// 	}
-	// };
-	// window.startCountdown = setInterval(countdown, 1000);
 }
 
 // FUNCTION TO CREATE SINGLE QUESTION VIEW
