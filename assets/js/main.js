@@ -1,126 +1,132 @@
 // CACHE PAGE ELEMENTS
+var page = document.getElementById('page');
 var highScoreLink = document.getElementById('high-score');
-var pageContainer = document.getElementById('page-container');
 var pageContent = document.getElementById('page-content');
 var startQuizBtn = document.getElementById('start-quiz');
-var landingPage = document.getElementById('landing');
 var timerDisplay = document.getElementById('timer');
 
 // GLOBAL VARIABLES
 var counter = 60;
 var scoreArr = loadScores() || [];
+var questionIndex = 0;
 var questionsArr = [
-	{
+  {
 		question           :
-			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
-		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
+			"Commonly used data types do NOT include:",
+		answers            : [ 'strings', 'booleans', 'alerts', 'numbers' ],
 		correctAnswerIndex : 2
 	},
 	{
 		question           :
-			"I'm baby mumblecore taiyaki fashion axe shoreditch, tilde mustache vape _______ fixie hella?",
-		answers            : [ 'Lomo', 'banjo', 'messenger', 'taxidermy' ],
+			'Arrays in Javascript can be used to store _______',
+		answers            : [ 'numbers and strings', 'other arrays', 'booleans', 'all of the above' ],
 		correctAnswerIndex : 3
 	},
 	{
 		question           :
-			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
-		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
-		correctAnswerIndex : 1
+			"The condition in an IF/ELSE is enclosed with _______",
+		answers            : [ 'quotes', 'curly brackets', 'parenthesis', 'square brackets' ],
+		correctAnswerIndex : 2
 	},
 	{
 		question           :
-			"I'm baby mumblecore taiyaki fashion axe shoreditch, tilde mustache vape _______ fixie hella?",
-		answers            : [ 'Lomo', 'banjo', 'messenger', 'taxidermy' ],
-		correctAnswerIndex : 0
-	},
-	{
+			'String values must be enclosed within _______ when being assigned to variables',
+		answers            : [ 'commas', 'curly brackets', 'quotes', 'parenthesis' ],
+		correctAnswerIndex : 2
+  },
+  {
 		question           :
-			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum, odio quam tempore?',
-		answers            : [ 'Lorem', 'consectetur', 'tempore', 'dolorum' ],
-		correctAnswerIndex : 1
+			'A very useful tool used during development and debugging for printing content to the debugger:',
+		answers            : [ 'JavaScript', 'terminal/bash', 'for loops', 'console.log' ],
+		correctAnswerIndex : 3
 	}
 ];
-var questionIndex = 0;
 
-// EVENT LISTENERS
+
+
+// GLOBAL SCOPE EVENT LISTENERS
 highScoreLink.addEventListener('click', highScoresPage);
 startQuizBtn.addEventListener('click', startQuiz);
 
-function startQuiz() {
-	// clear landing page
-	landingPage.remove();
 
+function startQuiz() {
 	// start timer
 	timer();
 
-	// call function to create single question page
+	// call function to create single question 
 	createQuestion(questionsArr[questionIndex]);
 }
 
 function timer() {
-	var countdown = function() {
-		counter--;
-		// timerDisplay.innerText = counter
-		counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
+  
+	window.startCountdown = setInterval(function() {
+    counter--;
+    // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
+    counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
+    // stop timer at 0
 		if (counter === 0) {
-			clearInterval(startCountdown);
-			gameOverPage();
+      clearInterval(startCountdown);
+			gameOverView();
 		}
-	};
-	window.startCountdown = setInterval(countdown, 1000);
+	}, 1000);
+  // var countdown = function() {
+  //   counter--;
+  //   // check if above zero since wrong answer can pull it below despite conditional check for clearInterval
+  //   counter > 0 ? (timerDisplay.innerText = counter) : (timerDisplay.innerText = 0);
+  //   // stop timer at 0
+	// 	if (counter === 0) {
+  //     clearInterval(startCountdown);
+	// 		gameOverView();
+	// 	}
+	// };
+	// window.startCountdown = setInterval(countdown, 1000);
 }
 
-// FUNCTION TO CREATE SINGLE QUESTION PAGE
+// FUNCTION TO CREATE SINGLE QUESTION VIEW
 function createQuestion(questionObj) {
+  // clear page
+  pageContent.innerHTML = ""
+
+  // iterate index for call to next question
+  questionIndex++;
+
 	// create question page container
-	var questionContainer = document.createElement('div');
-	questionContainer.className = 'question';
-	questionContainer.id = 'question';
+	var questionContainerEl = document.createElement('div');
+	questionContainerEl.className = 'question';
+	questionContainerEl.id = 'question';
 
 	// create question
-	var question = document.createElement('h2');
-	question.textContent = questionObj.question;
+	var questionEl = document.createElement('h2');
+	questionEl.textContent = questionObj.question;
 	// append question
-	questionContainer.appendChild(question);
+	questionContainerEl.appendChild(questionEl);
 	// create answer-list
-	var answerList = document.createElement('ul');
-	answerList.className = 'answer-list';
-	answerList.id = 'answer-list';
+	var answerListEl = document.createElement('ul');
+	answerListEl.className = 'answer-list';
+	answerListEl.id = 'answer-list';
 
 	// create array of answers
 	var answers = questionObj.answers;
 	// generate li for each answer in array
 	for (var i = 0; i < answers.length; i++) {
-		var answer = document.createElement('li');
-		answer.className = 'answer-list-item';
+		var answerEl = document.createElement('li');
+		answerEl.className = 'answer-list-item';
 		// add button
-		answer.innerHTML =
-			'<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
-		// console.log(i);
-		// console.log(questionObj.correctAnswerIndex);
+		answerEl.innerHTML =
+      // '<button class="btn answer-btn">' + (i + 1) + '. ' + answers[i] + '</button>';
+      `<button class="btn answer-btn">${i + 1}. ${answers[i]}</button>`;
 		// set data-attr flag on correct answer
 		if (i === questionObj.correctAnswerIndex) {
-			answer.setAttribute('data-correct-answer', 'true');
+			answerEl.setAttribute('data-correct-answer', 'true');
 		}
 		// append answer to ul
-		answerList.appendChild(answer);
+		answerListEl.appendChild(answerEl);
 	}
 
-	questionContainer.appendChild(answerList);
-	pageContent.appendChild(questionContainer);
+	questionContainerEl.appendChild(answerListEl);
+	pageContent.appendChild(questionContainerEl);
 
-	answerList.addEventListener('click', checkAnswer);
-
-	// function checkAnswer(event) {
-	//   var clicked = event.target.closest('li');
-	//   if (clicked.hasAttribute('data-correct-answer')){
-
-	//     displayCorrect(answerList);
-	//   } else {
-	//     displayWrong(answerList);
-	//   }
-	// }
+	answerListEl.addEventListener('click', checkAnswer);
 }
 
 // CHECK ANSWER, DISPLAY FEEDBACK MSG, TIMED CALL TO NEXT QUESTION FUNCTION
@@ -129,17 +135,17 @@ function checkAnswer(event) {
 	var clicked = event.target.closest('li.answer-list-item');
 	var answerList = document.getElementById('answer-list');
 
-	// check if clicked is truthy otherwise, ul was clicked and we don't want function to proceed
+	// check if clicked is truthy otherwise, ul was clicked and we don't want function to proceed or we will get an error because ul has no parent li.answer-list-item so .hasAttribute would be called on null
 	if (clicked) {
 		var isCorrectAnswer = clicked.hasAttribute('data-correct-answer');
 		if (isCorrectAnswer) {
-			// display correct message
+			// display 'correct' message
 			var correctMsgEl = document.createElement('p');
 			correctMsgEl.className = 'feedback-msg';
 			correctMsgEl.innerText = 'Correct!';
 			answerList.appendChild(correctMsgEl);
 		} else {
-			// display wrong message
+			// display 'wrong' message
 			counter = counter - 10;
 			var wrongMsgEl = document.createElement('p');
 			wrongMsgEl.className = 'feedback-msg';
@@ -148,51 +154,46 @@ function checkAnswer(event) {
 		}
 		answerList.removeEventListener('click', checkAnswer);
 
-		// QUESTION...DO I NEED TO CLEAR THIS TIMEOUT?
-		var delayNextQuestion = setTimeout(function() {
-			var questionContainer = document.getElementById('question');
-			questionContainer.remove();
-			questionIndex++;
-			if (questionIndex < questionsArr.length) {
+    // remove feedback msg after 1 second and proceed to next question or game over
+		setTimeout(function() {
+      if (counter <= 0 || questionIndex >= questionsArr.length) {
+        gameOverView();
+      } else {
 				createQuestion(questionsArr[questionIndex]);
-			} else {
-				gameOverPage();
-			}
+			} 
 		}, 1000);
 	}
 }
 
-// FUNCTION TO CREATE GAME OVER PAGE
-function gameOverPage() {
-	clearInterval(window.startCountdown);
+// FUNCTION TO CREATE GAME-OVER PAGE
+function gameOverView() {
+  // stop timer
+  clearInterval(window.startCountdown);
+  
+  pageContent.innerHTML = '';
 
-	var gameOver = document.createElement('div');
-	gameOver.className = 'game-over';
-	gameOver.id = 'game-over';
+	var gameOverEl = document.createElement('div');
+	gameOverEl.className = 'game-over';
+	gameOverEl.id = 'game-over';
 
-	var gameOverMsg = document.createElement('h2');
-	gameOverMsg.innerText = 'All done!';
-	gameOver.appendChild(gameOverMsg);
+	var gameOverMsgEl = document.createElement('h2');
+	gameOverMsgEl.innerText = 'All done!';
+	gameOverEl.appendChild(gameOverMsgEl);
 
-	var scoreMsg = document.createElement('h3');
-	scoreMsg.innerText = 'Your final score is ';
+	var scoreMsgEl = document.createElement('h3');
+	scoreMsgEl.innerText = 'Your final score is ';
 
-	var score = document.createElement('span');
-	score.id = 'player-score';
+	var scoreEl = document.createElement('span');
+	scoreEl.id = 'player-score';
 
 	if (counter >= 0) {
-		score.innerText = counter + '.';
-		// scoreMsg.appendChild(score);
+		scoreEl.innerText = counter + '.';
 	} else {
-		score.innerText = 0 + '.';
-		// var fullStop = document.createElement('span');
-		// fullStop.innerText = '.';
-		// scoreMsg.appendChild(score);
-		// scoreMsg.appendChild(fullStop);
+		scoreEl.innerText = 0 + '.';
 	}
 
-	scoreMsg.appendChild(score);
-	gameOver.appendChild(scoreMsg);
+	scoreMsgEl.appendChild(scoreEl);
+	gameOverEl.appendChild(scoreMsgEl);
 
 	var playerStatsFormEl = document.createElement('form');
 	playerStatsFormEl.innerHTML =
@@ -203,9 +204,8 @@ function gameOverPage() {
 	// add listener for input submit which calls function to add player object with player and score to high scoreArr
 	playerStatsFormEl.addEventListener('submit', handleStatsSubmit);
 
-	gameOver.appendChild(playerStatsFormEl);
-
-	pageContent.appendChild(gameOver);
+	gameOverEl.appendChild(playerStatsFormEl);
+	pageContent.appendChild(gameOverEl);
 }
 
 function handleStatsSubmit(event) {
@@ -213,31 +213,28 @@ function handleStatsSubmit(event) {
 	// get and save player stats
   var playerInitials = document.querySelector("input[name='initials']").value.toUpperCase();
 	var playerScore = counter > 0 ? counter : 0;
-	var statObj = {
+	var playerStatsObj = {
 		player : playerInitials,
 		score  : playerScore
 	};
-	scoreArr.push(statObj);
+	scoreArr.push(playerStatsObj);
 	saveScores();
 
 	// display high scores
-	var gameOverView = document.getElementById('game-over');
-	// gameOverView.remove();
 	highScoresPage();
 }
 
 // FUNCTION TO DISPLAY HIGH SCORES PAGE
 function highScoresPage() {
-  pageContainer.remove();
-	// remove 'view high scores' listener
-	highScoreLink.removeEventListener('click', highScoresPage);
-	var highScoresContainer = document.createElement('div');
-	// highScoresContainer.classList = 'container high-scores';
-	highScoresContainer.classList = 'container high-scores';
-	highScoresContainer.id = 'high-scores';
+  page.innerHTML = "";
+
+	var highScoresContainerEl = document.createElement('div');
+	// highScoresContainerEl.classList = 'container high-scores';
+	highScoresContainerEl.classList = 'container high-scores';
+	highScoresContainerEl.id = 'high-scores';
 	var heading = document.createElement('h2');
 	heading.innerText = 'High Scores';
-	highScoresContainer.appendChild(heading);
+	highScoresContainerEl.appendChild(heading);
 	var highScoresList = document.createElement('ul');
 	for (var i = 0; i < scoreArr.length; i++) {
 		var playerStats = document.createElement('li');
@@ -245,7 +242,7 @@ function highScoresPage() {
 			i + 1 + '. ' + scoreArr[i].player + ' - ' + scoreArr[i].score;
 		highScoresList.appendChild(playerStats);
 	}
-	highScoresContainer.appendChild(highScoresList);
+	highScoresContainerEl.appendChild(highScoresList);
 	var actionsContainer = document.createElement('div');
 	actionsContainer.className = 'actions';
 	var goBackBtn = document.createElement('a');
@@ -260,19 +257,21 @@ function highScoresPage() {
 	clearScores.addEventListener('click', handleClearScores);
 	actionsContainer.appendChild(clearScores);
 
-	highScoresContainer.appendChild(actionsContainer);
-	page.appendChild(highScoresContainer);
+	highScoresContainerEl.appendChild(actionsContainer);
+	page.appendChild(highScoresContainerEl);
 }
 
+// clear high scores
 function handleClearScores() {
 	scoreArr = [];
 	saveScores();
-	var highScoresContainer = document.getElementById('high-scores');
-	highScoresContainer.remove();
 	highScoresPage();
 }
 
+
 function saveScores() {
+  // sort high scores highest to lowest
+  scoreArr.sort((a, b) => b.score - a.score);
 	localStorage.setItem('stats', JSON.stringify(scoreArr));
 }
 
@@ -286,7 +285,6 @@ function loadScores() {
 
 
 
-// REFACTOR
-// move data to external file and import
-// change element names to *El
-// clean up
+
+
+// style a bit smaller so no scroll bar
