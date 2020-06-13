@@ -121,8 +121,9 @@ function createQuestion(questionObj) {
 	}
 
 	questionContainerEl.appendChild(answerListEl);
-	pageContent.appendChild(questionContainerEl);
-
+  pageContent.appendChild(questionContainerEl);
+  
+  // listen for user click on answer
 	answerListEl.addEventListener('click', checkAnswer);
 }
 
@@ -273,6 +274,7 @@ function saveScores() {
 	localStorage.setItem('stats', JSON.stringify(scoreArr));
 }
 
+// load high scores from localStorage
 function loadScores() {
 	var stats = localStorage.getItem('stats');
 	if (!stats) {
